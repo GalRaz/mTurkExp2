@@ -12,33 +12,21 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
    var timeline = [];
 
-   var welcome = {
-     type: "html-button-response",
-     stimulus: "<p>Hi! Thanks so much for participating in our experiment! </p>" +
-     "This HIT is part of a MIT scientific research project. Your decision to complete this HIT is voluntary. </p>" +
-     "There is no way for us to identify you. The only information we will have, in addition to your responses, </p>" +
-     "is the time at which you completed the survey. The results of the research may be presented  </p>" +
-     "at scientific meetings  or published in scientific journals. Clicking on the 'SUBMIT' button on the bottom of </p>" +
-     "this page indicates that you are at least 18 years of age and agree to complete this HIT voluntarily. </p>",
-     choices: ['SUBMIT'],
-   };
-   timeline.push(welcome);
-
      // define instructions trial
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p>This session will last for 15min.</p>" +
-           "<p> In each trial, you will see some symbols appearing one-by-one </p>" +
-           "<p> and you will be asked to stop the sequence whenever you can answer" +
+           "<p> In each trial, you will see some symbols appearing one-by-one. </p>" +
+           "<p> You will be asked to stop the sequence whenever you can answer" +
            " some questions (more on this later). </p>" +
            "<p> Each sequence is independent from one another. </p>"  +
-           "<p> <br /> We will try this on some examples before we move on to " +
-           "the actual experiment: </p>",
+           "<p> <br /> Let us practice before we move on to the actual experiment: </p>",
            choices: ['Continue'],
 
        post_trial_gap: 1000
      };
      timeline.push(instructions);
+
      var instructions = {
        type: 'html-button-response',
        stimulus: "Some sequences will be highly predictable, like these </p> (press spacebar when you figured out the pattern):",
@@ -305,7 +293,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
  var data3;
  var msg = $.ajax({type: "GET",
- url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment/sequencesExp2.csv",
+ url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment2/sequencesTest.csv",
   async: false}).responseText;
 
  data3 = Papa.parse(msg)
