@@ -16,11 +16,11 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p>This session will last for 15min.</p>" +
-           "<p> In each trial, you will see some symbols appearing one-by-one. </p>" +
+           "<p> In each trial, you will see some letters (A, B or C) appearing one-by-one. </p>" +
            "<p> You will be asked to stop the sequence whenever you can answer" +
            " some questions (more on this later). </p>" +
-           "<p> Each sequence is independent from one another. </p>"  +
-           "<p> <br /> Let us practice before we move on to the actual experiment: </p>",
+           "<p> Sequences are generated independently from each other. </p>"  +
+           "<p> <br /> Let us practice before we move on to the actual experiment. </p> <br />",
            choices: ['Continue'],
 
        post_trial_gap: 1000
@@ -29,7 +29,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
      var instructions = {
        type: 'html-button-response',
-       stimulus: "Some sequences will be highly predictable, like these </p> (press spacebar when you figured out the pattern):",
+       stimulus: "Some sequences will be highly predictable, like these </p> (press spacebar when you figured out the pattern) <br />",
            choices: ['Continue'],
 
        post_trial_gap: 1000
