@@ -17,8 +17,11 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        type: 'html-button-response',
        stimulus: "<p>This session will last for 15min.</p>" +
            "<p> In each trial, you will see some letters (A, B or C) appearing one-by-one. </p>" +
-           "<p> You will be asked to stop the sequence whenever you can answer" +
-           " some questions (more on this later). </p>" +
+           "<p> You will be asked to stop the sequence by pressing the spacebar. </p>" +
+           "<p> Some sequences you will see have some structure, and some don't. </p>" +
+           "<p> Your task is to stop the sequence whenever you feel like you can predict </p>" +
+           "<p> the next letter or when you feel like there is no structure </p>" +
+           "<p> and the sequence is unpredictable. </p>" +
            "<p> Sequences are generated independently from each other. </p>"  +
            "<p> <br /> Let us practice before we move on to the actual experiment. </p> <br />",
            choices: ['Continue'],
@@ -29,34 +32,19 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
      var instructions = {
        type: 'html-button-response',
-       stimulus: "Some sequences will be highly predictable, like these </p> (press spacebar when you figured out the pattern) <br />",
+       stimulus: "<p> Remember: Some sequences will be very predictable, some will be somewhat predictable, while others will have no structure at all. </p>" +
+       "<p> Stop the sequence by pressing the spacebar whenever you feel you can predict the next letter, or you decide that the sequence is unpredictable. </p>",
            choices: ['Continue'],
 
        post_trial_gap: 1000
      };
      timeline.push(instructions);
 
-     var scale_1 =
-        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-
-      var likert_page = {
-        type: 'survey-likert',
-        questions: [
-          {prompt: "Rate the sequence you just saw from completely random (1) to completely predictable (10).", labels: scale_1, required:true}
-
-        ]
-      };
-
-       var sorting_stimuli = [];
-       for (var i = 1; i <= 3; i++) {
-           sorting_stimuli.push("symbol" + i + ".png");
-       }
-
-       var multi_choice_options = ["A","B","C","I do not know"];
+       var multi_choice_options = ["A","B","C","Equally likely"];
        var multi_choice_block = {
          type: 'survey-multi-choice',
          questions: [
-           {prompt: "What do you think the NEXT symbol in the sequence would have been?", options: multi_choice_options, required:true}
+           {prompt: "Which letter is most likely to appear NEXT?", options: multi_choice_options, required:true}
          ],
        };
 
@@ -72,8 +60,8 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
          if (next_elem == response){
            feedback.stimulus = "Correct!"
          }
-         else if (response == "I"){
-             feedback.stimulus = "Okay, let's move to the next trial"
+         else if (response == "E"){
+             feedback.stimulus = ""
            }
          else{
            feedback.stimulus = "Incorrect!"+
@@ -150,42 +138,13 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
         // define questionnaire procedure
         var questionnaire = {
-          timeline: [sequence, likert_page, multi_choice_block, feedback], //
+          timeline: [sequence, multi_choice_block, feedback], //
         }
         timeline.push(questionnaire);
 
      }
    }
    csvValues()
-
-   var begin_exp = {
-     type: 'html-button-response',
-     stimulus: "<p> Some sequences may be completely random, like this one </p>" +
-     "(press spacebar you have convinced yourself that the sequence is random)",
-     choices: ['Continue']
-   };
-   timeline.push(begin_exp)
-   var feedback3 = {
-   type: 'html-button-response',
-   stimulus: "",
-   choices: ['Continue'],
-   on_start: function(feedback3) {
-     var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-     var response = JSON.parse(trialstring)["responses"][7];
-
-     var next_elem = jsPsych.data.get().last(4).values()[0].next_elem
-     if (next_elem == response){
-       feedback3.stimulus = "Correct!"
-     }
-     else if (response == "I"){
-         feedback3.stimulus = "Okay, let's move to the next trial"
-       }
-     else{
-       feedback3.stimulus = "Incorrect!"+
-       "<p> The correct choice was: " + next_elem
-     }
-     }
-   }
 
    var data4;
    var msg = $.ajax({type: "GET",
@@ -255,7 +214,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
     // define questionnaire3 procedure
     var questionnaire3 = {
-      timeline: [sequence, likert_page, multi_choice_block, feedback3], //
+      timeline: [sequence, multi_choice_block, feedback], //
     }
     timeline.push(questionnaire3);
 
@@ -264,32 +223,10 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
    csvValues3()
    var begin_exp = {
    type: 'html-button-response',
-   stimulus: "<p> You are now ready to proceed with the actual experiment. </p>"+
-   "<p>Some sequences will be random, some will not, and others will be somewhere in between </p>",
+   stimulus: "<p> You are now ready to proceed with the actual experiment. </p>",
    choices: ['Continue']
    };
    timeline.push(begin_exp)
-   var feedback2 = {
-   type: 'html-button-response',
-   stimulus: "",
-   choices: ['Continue'],
-   on_start: function(feedback2) {
-     var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-     var response = JSON.parse(trialstring)["responses"][7];
-
-     var next_elem = jsPsych.data.get().last(4).values()[0].next_elem
-     if (next_elem == response){
-       feedback2.stimulus = "Correct!"
-     }
-     else if (response == "I"){
-         feedback2.stimulus = "Okay, let's move to the next trial"
-       }
-     else{
-       feedback2.stimulus = "Incorrect!"+
-       "<p> The correct choice was: " + next_elem
-     }
-     }
-   }
 
  var data3;
  var msg = $.ajax({type: "GET",
@@ -365,7 +302,7 @@ console.log(data3)
 
     // define questionnaire2 procedure
     var questionnaire2 = {
-      timeline: [sequence2, likert_page, multi_choice_block, feedback2], //
+      timeline: [sequence2, multi_choice_block, feedback], //
     }
     timeline.push(questionnaire2);
 
