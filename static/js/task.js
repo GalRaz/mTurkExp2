@@ -15,7 +15,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      // define instructions trial
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p>This session will last for 15min.</p>" +
+       stimulus: "<p>This session will last for 10min.</p>" +
            "<p> In each trial, you will see some letters (A, B or C) appearing one-by-one. </p>" +
            "<p> You will be asked to stop the sequence by pressing the spacebar. </p>" +
            "<p> Some sequences you will see have some structure, and some don't. </p>" +
@@ -55,8 +55,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        on_start: function(feedback) {
          var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
          var response = JSON.parse(trialstring)["responses"][7];
-         console.log(response)
+
          var next_elem = jsPsych.data.get().last(4).values()[0].next_elem
+
          if (next_elem == response){
            feedback.stimulus = "Correct!"
          }
@@ -80,8 +81,6 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
      var data2 = Object.values(data2);
 
-     var next_trial;
-
      function csvValues(){
        var arrayLength = data2.length;
 
@@ -89,11 +88,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
            var test_stimuli = []
              for (var j = 0; j < data2[i].length - 1; j++) {
 
-           next_trial = data2[i][j+1];
-
            test_stimuli.push({stimulus: '<div style="font-size:65px;">  <p> </p>' +
            Object.values(data2[i][j]).toString().replace(/,/g, '  ') +
-           '</div>', data: {test_part: 'training', next_elem: data2[i][j+1]}})
+           '</div>', data: {test_part: 'training', next_elem: data2[i][j+2]}})
        }
 
        // sample from test_stimuli
@@ -111,21 +108,6 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
             symbol.trial_duration = 0;
             symbol.post_trial_gap = 0;
             jsPsych.endCurrentTimeline()
-          }
-
-          // get trial data
-          var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-          // convert to dictionary and get time elapsed
-          var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-          // end experiment after 12min
-          if (time_elapsed > 720000) {
-            var end_exp = {
-              type: 'html-button-response',
-              stimulus: "<p> Thank you for completing this experiment </p>",
-              choices: ['Exit']
-            }
-            timeline.push(end_exp);
-            jsPsych.endExperiment()
           }
         }
       }
@@ -156,8 +138,6 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
    var data4 = Object.values(data4);
 
-   var next_trial;
-
    function csvValues3(){
    var arrayLength = data4.length;
 
@@ -165,11 +145,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        var test_stimuli = []
          for (var j = 0; j < data4[i].length - 1; j++) {
 
-       next_trial = data4[i][j+1];
-
        test_stimuli.push({stimulus: '<div style="font-size:65px;">' +
        Object.values(data4[i][j]).toString().replace(/,/g, '  ') +
-       '</div>', data: {test_part: 'training', next_elem: data4[i][j+1]}})
+       '</div>', data: {test_part: 'training', next_elem: data4[i][j+2]}})
    }
 
    // sample from test_stimuli
@@ -187,21 +165,6 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
         symbol.trial_duration = 0;
         symbol.post_trial_gap = 0;
         jsPsych.endCurrentTimeline()
-      }
-
-      // get trial data
-      var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-      // convert to dictionary and get time elapsed
-      var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-      // end experiment after 12min
-      if (time_elapsed > 720000) {
-        var end_exp = {
-          type: 'html-button-response',
-          stimulus: "<p> Thank you for completing this experiment </p>",
-          choices: ['Exit']
-        }
-        timeline.push(end_exp);
-        jsPsych.endExperiment()
       }
     }
    }
@@ -242,10 +205,6 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 // shuffle data
 shuffle(data3)
 
-console.log(data3)
-
- var next_trial;
-
  function csvValues2(){
    var arrayLength = data3.length;
 
@@ -253,11 +212,9 @@ console.log(data3)
        var test_stimuli = []
          for (var j = 0; j < data3[i].length-1; j++) {
 
-       next_trial = data3[i][j+1];
-
        test_stimuli.push({stimulus: '<div style="font-size:65px;">' +
        Object.values(data3[i][j]).toString().replace(/,/g, '  ') +
-       '</div>', data: {test_part: 'test', next_elem: data3[i][j+1]}})
+       '</div>', data: {test_part: 'test', next_elem: data3[i][j+2]}})
    }
 
    // sample from test_stimuli
@@ -275,21 +232,6 @@ console.log(data3)
         symbol.trial_duration = 0;
         symbol.post_trial_gap = 0;
         jsPsych.endCurrentTimeline()
-      }
-
-      // get trial data
-      var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-      // convert to dictionary and get time elapsed
-      var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-      // end experiment after 12min
-      if (time_elapsed > 360000) {
-        var end_exp = {
-          type: 'html-button-response',
-          stimulus: "<p> Thank you for completing this experiment </p>",
-          choices: ['Exit']
-        }
-        timeline.push(end_exp);
-        jsPsych.endExperiment()
       }
     }
   }
@@ -323,6 +265,22 @@ jsPsych.init({
     // record data to psiTurk after each trial
     on_data_update: function(data) {
         psiturk.recordTrialData(data);
+
+        // get trial data
+        var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
+        // convert to dictionary and get time elapsed
+        var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
+        // end experiment after 10min
+        if (time_elapsed > 600000) {
+          var end_exp = {
+            type: 'html-button-response',
+            stimulus: "<p> Thank you for completing this experiment </p>",
+            choices: ['Exit']
+          }
+          timeline.push(end_exp);
+          jsPsych.endExperiment()
+        }
+
     },
     on_finish: function() {
         // record proportion correct as unstructured data
