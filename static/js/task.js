@@ -12,6 +12,16 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
    var timeline = [];
 
+   var bot_test = {
+     type: 'survey-text',
+     questions: [
+    {prompt: "<p> To check that you're not a bot: </p>" +
+    "<p> What do you see? Describe the shape & color with two words, separated by a comma. </p>", required: true}],
+    preamble: '<img src="img/shape.png"></img>'
+   }
+   timeline.push(bot_test);
+
+
      // define instructions trial
      var instructions = {
        type: 'html-button-response',
