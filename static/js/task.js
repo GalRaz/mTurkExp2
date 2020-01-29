@@ -17,7 +17,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      questions: [
     {prompt: "<p> To check that you're not a bot: </p>" +
     "<p> What do you see? Describe the shape & color with two words, separated by a comma. </p>", required: true}],
-    preamble: '<img src="img/shape.png"></img>'
+    preamble: '<img src="/static/images/shape.png"></img>',
+    button_label: 'Continue',
+    data: {test_part: 'botcheck'}
    }
    timeline.push(bot_test);
 
@@ -34,9 +36,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
            "<p> and the sequence is unpredictable. </p>" +
            "<p> Sequences are generated independently from each other. </p>"  +
            "<p> <br /> Let us practice before we move on to the actual experiment. </p> <br />",
-           choices: ['Continue'],
-
-       post_trial_gap: 1000
+       choices: ['Continue'],
+       post_trial_gap: 1000,
+       data: {test_part: 'instructions'},
      };
      timeline.push(instructions);
 
@@ -44,9 +46,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        type: 'html-button-response',
        stimulus: "<p> Remember: Some sequences will be very predictable, some will be somewhat predictable, while others will have no structure at all. </p>" +
        "<p> Stop the sequence by pressing the spacebar whenever you feel you can predict the next letter, or you decide that the sequence is unpredictable. </p>",
-           choices: ['Continue'],
-
-       post_trial_gap: 1000
+       choices: ['Continue'],
+       post_trial_gap: 1000,
+       data: {test_part: 'instructions'},
      };
      timeline.push(instructions);
 
@@ -62,11 +64,12 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        type: 'html-button-response',
        stimulus: "",
        choices: ['Continue'],
+       data: {test_part: 'feedback'},
        on_start: function(feedback) {
          var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
          var response = JSON.parse(trialstring)["responses"][7];
 
-         var next_elem = jsPsych.data.get().last(4).values()[0].next_elem
+         var next_elem = jsPsych.data.get().last(2).values()[0].next_elem
 
          if (next_elem == response){
            feedback.stimulus = "Correct!"
@@ -100,7 +103,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
            test_stimuli.push({stimulus: '<div style="font-size:65px;">  <p> </p>' +
            Object.values(data2[i][j]).toString().replace(/,/g, '  ') +
-           '</div>', data: {test_part: 'training', next_elem: data2[i][j+2]}})
+           '</div>', data: {test_part: 'training', next_elem: data2[i][j+1]}})
        }
 
        // sample from test_stimuli
@@ -111,13 +114,10 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
           trial_duration: 800,
           post_trial_gap: 300,
           data: jsPsych.timelineVariable('data'),
-          on_start: function(symbol){
+          on_finish: function(symbol){
             var spacePressed = jsPsych.data.get().last(1).values()[0].key_press
           if(spacePressed == 32) {
-            symbol.stimulus = "";
-            symbol.trial_duration = 0;
-            symbol.post_trial_gap = 0;
-            jsPsych.endCurrentTimeline()
+            jsPsych.endCurrentTimeline();
           }
         }
       }
@@ -157,7 +157,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
        test_stimuli.push({stimulus: '<div style="font-size:65px;">' +
        Object.values(data4[i][j]).toString().replace(/,/g, '  ') +
-       '</div>', data: {test_part: 'training', next_elem: data4[i][j+2]}})
+       '</div>', data: {test_part: 'training', next_elem: data4[i][j+1]}})
    }
 
    // sample from test_stimuli
@@ -168,13 +168,10 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
       trial_duration: 800,
       post_trial_gap: 300,
       data: jsPsych.timelineVariable('data'),
-      on_start: function(symbol){
+      on_finish: function(symbol){
         var spacePressed = jsPsych.data.get().last(1).values()[0].key_press
       if(spacePressed == 32) {
-        symbol.stimulus = "";
-        symbol.trial_duration = 0;
-        symbol.post_trial_gap = 0;
-        jsPsych.endCurrentTimeline()
+        jsPsych.endCurrentTimeline();
       }
     }
    }
@@ -194,10 +191,12 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
    }
    }
    csvValues3()
+
    var begin_exp = {
    type: 'html-button-response',
    stimulus: "<p> You are now ready to proceed with the actual experiment. </p>",
-   choices: ['Continue']
+   choices: ['Continue'],
+   data: {test_part: 'instructions'},
    };
    timeline.push(begin_exp)
 
@@ -224,7 +223,7 @@ shuffle(data3)
 
        test_stimuli.push({stimulus: '<div style="font-size:65px;">' +
        Object.values(data3[i][j]).toString().replace(/,/g, '  ') +
-       '</div>', data: {test_part: 'test', next_elem: data3[i][j+2]}})
+       '</div>', data: {test_part: 'test', next_elem: data3[i][j+1]}})
    }
 
    // sample from test_stimuli
@@ -235,12 +234,9 @@ shuffle(data3)
       trial_duration: 800,
       post_trial_gap: 300,
       data: jsPsych.timelineVariable('data'),
-      on_start: function(symbol){
+      on_finish: function(symbol){
         var spacePressed = jsPsych.data.get().last(1).values()[0].key_press
       if(spacePressed == 32) {
-        symbol.stimulus = "";
-        symbol.trial_duration = 0;
-        symbol.post_trial_gap = 0;
         jsPsych.endCurrentTimeline()
       }
     }
@@ -285,7 +281,8 @@ jsPsych.init({
           var end_exp = {
             type: 'html-button-response',
             stimulus: "<p> Thank you for completing this experiment </p>",
-            choices: ['Exit']
+            choices: ['Exit'],
+            data: {test_part: 'exitpage'},
           }
           timeline.push(end_exp);
           jsPsych.endExperiment()
