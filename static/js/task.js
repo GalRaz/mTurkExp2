@@ -58,6 +58,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
          questions: [
            {prompt: "Which letter is most likely to appear NEXT?", options: multi_choice_options, required:true}
          ],
+         data: {test_part: 'prediction'},
        };
 
        var feedback = {
@@ -171,6 +172,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
       on_finish: function(symbol){
         var spacePressed = jsPsych.data.get().last(1).values()[0].key_press
       if(spacePressed == 32) {
+
         jsPsych.endCurrentTimeline();
       }
     }
