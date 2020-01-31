@@ -289,11 +289,8 @@ jsPsych.init({
           timeline.push(end_exp);
           jsPsych.endExperiment()
         }
-
     },
     on_finish: function() {
-        // record proportion correct as unstructured data
-
         // save data
         psiturk.saveData({
             success: function() {
