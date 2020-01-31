@@ -204,7 +204,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
  var data3;
  var msg = $.ajax({type: "GET",
- url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment2/sequencesTest.csv",
+ url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment2/sequencesExp2.csv",
   async: false}).responseText;
 
  data3 = Papa.parse(msg)
