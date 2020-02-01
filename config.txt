@@ -12,7 +12,7 @@ ad_group = Default psiTurk Stroop Example
 psiturk_keywords = stroop
 organization_name = MIT
 browser_exclude_rule = MSIE, mobile, tablet
-allow_repeats = true
+allow_repeats = false
 
 [Database Parameters]
 database_url = postgres://odtnymmciasgdy:0b2b2306d5791865622bf4bb231e5b37a89249d66f5b4425aa131125625c4509@ec2-3-228-202-195.compute-1.amazonaws.com:5432/dahtv03dh205mr

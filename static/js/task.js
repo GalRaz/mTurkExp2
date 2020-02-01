@@ -271,7 +271,7 @@ shuffle(data3)
       // convert to dictionary and get time elapsed
       var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
       // end experiment after 10min
-      if (time_elapsed > 60000) {
+      if (time_elapsed > 600000) {
 
         jsPsych.endExperiment()
     }
