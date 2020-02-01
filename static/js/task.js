@@ -27,25 +27,37 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      // define instructions trial
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p>This session will last for 10min.</p>" +
-           "<p> In each trial, you will see some letters (A, B or C) appearing one-by-one. </p>" +
-           "<p> You will be asked to stop the sequence by pressing the spacebar. </p>" +
-           "<p> Some sequences you will see have some structure, and some don't. </p>" +
-           "<p> Your task is to stop the sequence whenever you feel like you can predict </p>" +
-           "<p> the next letter or when you feel like there is no structure </p>" +
-           "<p> and the sequence is unpredictable. </p>" +
-           "<p> Sequences are generated independently from each other. </p>"  +
-           "<p> <br /> Let us practice before we move on to the actual experiment. </p> <br />",
+       stimulus: "<p> <i> This session will last for 10min. Please complete it in full screen mode. </p>" +
+           "<p> Do this experiment in one go, otherwise it will time out and we will </p>" +
+           "<p> not be able to pay you. </i> </p> ",
        choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
      };
      timeline.push(instructions);
 
+
+     // define instructions trial
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p> Remember: Some sequences will be very predictable, some will be somewhat predictable, while others will have no structure at all. </p>" +
-       "<p> Stop the sequence by pressing the spacebar whenever you feel you can predict the next letter, or you decide that the sequence is unpredictable. </p>",
+       stimulus: "<p> In each trial, you will see some letters (A, B or C) appearing one-by-one. </p>" +
+           "<p> <b> Your task is to stop the sequence when 1) you feel like you can predict the next letter <i>or</i> </p>" +
+           "<p> 2) you feel like there is no structure and the sequence is unpredictable. </b> </p>" +
+           "<p> Some sequences you will see have some structure, and some don't, so they will be more or less predictable. </p>" +
+           "<p> <br> Let us practice a bit before we move on to the actual experiment. </p> <br />",
+       choices: ['Continue'],
+       post_trial_gap: 1000,
+       data: {test_part: 'instructions'},
+     };
+     timeline.push(instructions);
+     var instructions = {
+       type: 'html-button-response',
+       stimulus: "<p> Remember: Some sequences will be very predictable, some will be somewhat predictable, </p>" +
+       "<p> while others will have no structure at all. Stop the sequence by pressing the spacebar  </p>" +
+       "<p> whenever you feel you can predict the next letter, or you decide that the sequence is unpredictable. </p>" +
+       "<p> When you stop the sequence, you will be asked to predict the next letter, and you will receive feedback. </p>" +
+       "<p> You can also say that the sequence was unpredictable by selecting 'Equally likely'. In this case you will receive no feedback. </p>" +
+       "<p> <br> Let us practice. </br> <p>",
        choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
@@ -196,7 +208,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
    var begin_exp = {
    type: 'html-button-response',
-   stimulus: "<p> You are now ready to proceed with the actual experiment. </p>",
+   stimulus: "<p> You are now ready to proceed with the actual experiment. It will take about 8min from now. </p>",
    choices: ['Continue'],
    data: {test_part: 'instructions'},
    };
@@ -279,14 +291,8 @@ jsPsych.init({
         // convert to dictionary and get time elapsed
         var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
         // end experiment after 10min
-        if (time_elapsed > 600000) {
-          var end_exp = {
-            type: 'html-button-response',
-            stimulus: "<p> Thank you for completing this experiment </p>",
-            choices: ['Exit'],
-            data: {test_part: 'exitpage'},
-          }
-          timeline.push(end_exp);
+        if (time_elapsed > 20000) {
+
           jsPsych.endExperiment()
         }
     },
