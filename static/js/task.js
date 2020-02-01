@@ -9,7 +9,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
-
+  var experiment_time = 500000;
    var timeline = [];
 
    var bot_test = {
@@ -108,17 +108,28 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
          var tick_amount;
          // set progress bar to fraction of total time
-         tick_amount = (time_elapsed - startTime)/500000;
+         tick_amount = (time_elapsed - startTime)/experiment_time;
          jsPsych.setProgressBar(tick_amount);
 
-         if (time_elapsed - startTime > 500000) {
+         if (time_elapsed - startTime > experiment_time) {
            jsPsych.endExperiment()
        }
      },
      on_finish: function(){
        document.querySelector('#jspsych-progressbar-container').style.display = 'none';
+
+       // get trial data
+       var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
+       // convert to dictionary and get time elapsed
+       var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
+       // end experiment after 10min
+       var startTime = jsPsych.data.get().last(1).values()[0].startTime
+
+       if (time_elapsed - startTime > experiment_time) {
+         jsPsych.endExperiment()
      }
    }
+ }
 
      var data2;
      var msg = $.ajax({type: "GET",
