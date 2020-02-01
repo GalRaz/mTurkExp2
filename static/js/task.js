@@ -53,7 +53,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p> Remember: Some sequences will be very predictable, some will be somewhat predictable, </p>" +
-       "<p> while others will have no structure at all. Stop the sequence by pressing the spacebar  </p>" +
+       "<p> while others will have no structure at all.</p> <p> <b> Stop the sequence by pressing the spacebar </b> </p>" +
        "<p> whenever you feel you can predict the next letter, or you decide that the sequence is unpredictable. </p>" +
        "<p> When you stop the sequence, you will be asked to predict the next letter, and you will receive feedback. </p>" +
        "<p> You can also say that the sequence was unpredictable by selecting 'Equally likely'. In this case you will receive no feedback. </p>" +
@@ -265,7 +265,18 @@ shuffle(data3)
     // define questionnaire2 procedure
     var questionnaire2 = {
       timeline: [sequence2, multi_choice_block, feedback], //
+      on_finish: function() {
+      // get trial data
+      var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
+      // convert to dictionary and get time elapsed
+      var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
+      // end experiment after 10min
+      if (time_elapsed > 60000) {
+
+        jsPsych.endExperiment()
     }
+  }
+}
     timeline.push(questionnaire2);
 
  }
@@ -285,17 +296,7 @@ jsPsych.init({
     // record data to psiTurk after each trial
     on_data_update: function(data) {
         psiturk.recordTrialData(data);
-
-        // get trial data
-        var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-        // convert to dictionary and get time elapsed
-        var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-        // end experiment after 10min
-        if (time_elapsed > 120000) {
-
-          jsPsych.endExperiment()
-        }
-    },
+      },
     on_finish: function() {
         // save data
         psiturk.saveData({
