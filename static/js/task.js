@@ -231,7 +231,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
    var begin_exp = {
    type: 'html-button-response',
-   stimulus: "<p> You are now ready to proceed with the actual experiment. It will take about 8min from now. </p>",
+   stimulus: "<p> You are now ready to proceed with the actual experiment. It will take about 8min from now. </p>" +
+            " <p> <b> Remember to press the spacebar to terminate the sequence when: </b> </p>" +
+            " <p> 1) you can predict the next letter </p> <p> <b> or </b> </p> <p> 2) the sequence is unpredictable. </p>",
    choices: ['Continue'],
    data: {test_part: 'instructions'},
    on_finish: function(){
