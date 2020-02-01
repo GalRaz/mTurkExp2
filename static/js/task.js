@@ -19,8 +19,11 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
     "<p> What do you see? Describe the shape & color with two words, separated by a comma. </p>", required: true}],
     preamble: '<img src="/static/images/shape.png"></img>',
     button_label: 'Continue',
-    data: {test_part: 'botcheck'}
+    data: {test_part: 'botcheck'},
+    on_start: function() {
+      document.querySelector('#jspsych-progressbar-container').style.display = 'none';
    }
+ }
    timeline.push(bot_test);
 
 
@@ -43,8 +46,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        stimulus: "<p> In each trial, you will see some letters (A, B or C) appearing one-by-one. </p>" +
            "<p> <b> Your task is to stop the sequence when 1) you feel like you can predict the next letter <i>or</i> </p>" +
            "<p> 2) you feel like there is no structure and the sequence is unpredictable. </b> </p>" +
-           "<p> Some sequences you will see have some structure, and some don't, so they will be more or less predictable. </p>" +
-           "<p> <br> Let us practice a bit before we move on to the actual experiment. </p> <br />",
+           "<p> Some sequences you will see have some structure, and some don't, so they will be more or less predictable. </p>",
        choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
@@ -53,10 +55,10 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p> Remember: Some sequences will be very predictable, some will be somewhat predictable, </p>" +
-       "<p> while others will have no structure at all.</p> <p> <b> Stop the sequence by pressing the spacebar </b> </p>" +
+       "<p> while others will have no structure at all.</p> <p> <b> Stop the sequence by pressing the spacebar. </b> </p>" +
        "<p> whenever you feel you can predict the next letter, or you decide that the sequence is unpredictable. </p>" +
        "<p> When you stop the sequence, you will be asked to predict the next letter, and you will receive feedback. </p>" +
-       "<p> You can also say that the sequence was unpredictable by selecting 'Equally likely'. In this case you will receive no feedback. </p>" +
+       "<p> You can also say that the sequence was unpredictable by selecting 'Equally likely' (no feedback in this case). </p>" +
        "<p> <br> Let us practice. </br> <p>",
        choices: ['Continue'],
        post_trial_gap: 1000,
@@ -71,6 +73,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
            {prompt: "Which letter is most likely to appear NEXT?", options: multi_choice_options, required:true}
          ],
          data: {test_part: 'prediction'},
+         on_start: function() {
+           document.querySelector('#jspsych-progressbar-container').style.display = 'initial';
+         }
        };
 
        var feedback = {
@@ -94,8 +99,26 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
            feedback.stimulus = "Incorrect!"+
            "<p> The correct choice was: " + next_elem
          }
-         }
-         }
+         // get trial data
+         var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
+         // convert to dictionary and get time elapsed
+         var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
+         // end experiment after 10min
+         var startTime = jsPsych.data.get().last(1).values()[0].startTime
+
+         var tick_amount;
+         // set progress bar to fraction of total time
+         tick_amount = (time_elapsed - startTime)/500000;
+         jsPsych.setProgressBar(tick_amount);
+
+         if (time_elapsed - startTime > 500000) {
+           jsPsych.endExperiment()
+       }
+     },
+     on_finish: function(){
+       document.querySelector('#jspsych-progressbar-container').style.display = 'none';
+     }
+   }
 
      var data2;
      var msg = $.ajax({type: "GET",
@@ -211,6 +234,15 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
    stimulus: "<p> You are now ready to proceed with the actual experiment. It will take about 8min from now. </p>",
    choices: ['Continue'],
    data: {test_part: 'instructions'},
+   on_finish: function(){
+     var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
+     // convert to dictionary and get time elapsed
+     var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
+
+     jsPsych.data.addProperties({startTime: time_elapsed});
+
+   }
+
    };
    timeline.push(begin_exp)
 
@@ -265,17 +297,6 @@ shuffle(data3)
     // define questionnaire2 procedure
     var questionnaire2 = {
       timeline: [sequence2, multi_choice_block, feedback], //
-      on_finish: function() {
-      // get trial data
-      var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-      // convert to dictionary and get time elapsed
-      var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-      // end experiment after 10min
-      if (time_elapsed > 600000) {
-
-        jsPsych.endExperiment()
-    }
-  }
 }
     timeline.push(questionnaire2);
 
@@ -293,6 +314,8 @@ jsPsych.data.addProperties({
 jsPsych.init({
     display_element: 'jspsych-target',
     timeline: timeline,
+    show_progress_bar: true,
+    auto_update_progress_bar: false,
     // record data to psiTurk after each trial
     on_data_update: function(data) {
         psiturk.recordTrialData(data);
