@@ -66,39 +66,18 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      };
      timeline.push(instructions);
 
-       var multi_choice_options = ["A","B","C","Equally likely"];
-       var multi_choice_block = {
-         type: 'survey-multi-choice',
-         questions: [
-           {prompt: "Which letter is most likely to appear NEXT?", options: multi_choice_options, required:true}
-         ],
-         data: {test_part: 'prediction'},
+
+       var continue = {
+         type: 'html-keyboard-response',
+         stimulus: "Next sequence coming up..",
+         trial_duration: 5000,
+         choices: jsPsych.NO_KEYS,
+         data: {test_part: 'between_sequences'},
          on_start: function() {
            document.querySelector('#jspsych-progressbar-container').style.display = 'initial';
          }
        };
 
-       var feedback = {
-       type: 'html-button-response',
-       stimulus: "",
-       choices: ['Continue'],
-       data: {test_part: 'feedback'},
-       on_start: function(feedback) {
-         var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-         var response = JSON.parse(trialstring)["responses"][7];
-
-         var next_elem = jsPsych.data.get().last(2).values()[0].next_elem
-
-         if (next_elem == response){
-           feedback.stimulus = "Correct!"
-         }
-         else if (response == "E"){
-             feedback.stimulus = ""
-           }
-         else{
-           feedback.stimulus = "Incorrect!"+
-           "<p> The correct choice was: " + next_elem
-         }
          // get trial data
          var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
          // convert to dictionary and get time elapsed
@@ -133,13 +112,14 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
      var data2;
      var msg = $.ajax({type: "GET",
-     url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment2/imagesSeqs.csv",
+     url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment2/generateseqs.csv",
       async: false}).responseText;
 
      data2 = Papa.parse(msg)
      data2 = data2['data']
 
      var data2 = Object.values(data2);
+     console.log(data2)
 
      function csvValues(){
        var arrayLength = data2.length;
@@ -179,7 +159,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
         // define questionnaire procedure
         var questionnaire = {
-          timeline: [sequence, multi_choice_block, feedback], //
+          timeline: [sequence, continue], //
         }
         timeline.push(questionnaire);
 
@@ -234,7 +214,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
     // define questionnaire3 procedure
     var questionnaire3 = {
-      timeline: [sequence, multi_choice_block, feedback], //
+      timeline: [sequence, continue], //
     }
     timeline.push(questionnaire3);
 
@@ -311,7 +291,7 @@ shuffle(data3)
 
     // define questionnaire2 procedure
     var questionnaire2 = {
-      timeline: [sequence2, multi_choice_block, feedback], //
+      timeline: [sequence2, continue], //
 }
     timeline.push(questionnaire2);
 
