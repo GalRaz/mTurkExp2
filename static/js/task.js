@@ -133,7 +133,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
      var data2;
      var msg = $.ajax({type: "GET",
-     url: "https://raw.githubusercontent.com/ashtishah/CoCoSci/master/Experiment/sequencesTrial.csv",
+     url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment2/imagesSeqs.csv",
       async: false}).responseText;
 
      data2 = Papa.parse(msg)
@@ -148,9 +148,11 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
            var test_stimuli = []
              for (var j = 0; j < data2[i].length - 1; j++) {
 
-           test_stimuli.push({stimulus: '<div style="font-size:65px;">  <p> </p>' +
-           Object.values(data2[i][j]).toString().replace(/,/g, '  ') +
-           '</div>', data: {test_part: 'training', next_elem: data2[i][j+1]}})
+// '<div style="font-size:65px;">  <p> </p>' + Object.values(data2[i][j]).toString().replace(/,/g, '  ') + '</div>'
+
+            console.log('<img src="/static/images/' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>')
+
+           test_stimuli.push({stimulus: '<img src="/static/images/' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>' , data: {test_part: 'training', next_elem: data2[i][j+1]}})
        }
 
        // sample from test_stimuli
