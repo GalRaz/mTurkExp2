@@ -55,7 +55,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        type: 'html-button-response',
        stimulus: "<p> To re-iterate: You just need to stop the trial with pressing space bar whenever you want the next trial to start. </p>" +
        "<p> <p> <b> Stop the sequence by pressing the spacebar. </b> </p>" +
-       "<p> The experiment will end automatically after 5 minutes. </p>" +
+       "<p> The experiment will end automatically after a couple of minutes. </p>" +
        "<p> Please, maintain your attention during the experiment. </p>" +
        "<p> You may encounter little, unexpected tests during the experiment, </p>" +
        "<p>  to make sure you are paying attention. </p>",
@@ -140,8 +140,8 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
           type: "html-keyboard-response",
           stimulus: jsPsych.timelineVariable('stimulus'),
           choices: jsPsych.ALL_KEYS,
-          trial_duration: 800,
-          post_trial_gap: 300,
+          trial_duration: 1000,
+          post_trial_gap: 500,
           data: jsPsych.timelineVariable('data'),
           on_finish: function(symbol){
             var spacePressed = jsPsych.data.get().last(1).values()[0].key_press
@@ -177,7 +177,7 @@ jsPsych.data.addProperties({
 jsPsych.init({
     display_element: 'jspsych-target',
     timeline: timeline,
-    show_progress_bar: true,
+    show_progress_bar: false,
     auto_update_progress_bar: false,
     // record data to psiTurk after each trial
     on_data_update: function(data) {
