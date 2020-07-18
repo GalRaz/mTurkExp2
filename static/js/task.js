@@ -19,10 +19,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
     "<p> What do you see? Describe the shape & color with two words, separated by a comma. </p>", required: true}],
     preamble: '<img src="/static/images/shape.png"></img>',
     button_label: 'Continue',
-    data: {test_part: 'botcheck'},
-    on_start: function() {
-      document.querySelector('#jspsych-progressbar-container').style.display = 'none';
-   }
+    data: {test_part: 'botcheck'}
  }
    timeline.push(bot_test);
 
@@ -69,35 +66,21 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        var between_sequences = {
          type: 'html-keyboard-response',
          stimulus: "Next sequence coming up..",
-         trial_duration: 5000,
+         trial_duration: 3500,
          choices: jsPsych.NO_KEYS,
          data: {test_part: 'between_sequences'},
          on_start: function() {
-         document.querySelector('#jspsych-progressbar-container').style.display = 'initial';
          // get trial data
          var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
          // convert to dictionary and get time elapsed
          var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
          // end experiment after 10min
 
-         var tick_amount;
-         // set progress bar to fraction of total time
-         tick_amount = time_elapsed/experiment_time;
-
-         console.log(time_elapsed)
-         console.log(experiment_time)
-
-         console.log(tick_amount)
-
-         jsPsych.setProgressBar(tick_amount);
-
          if (time_elapsed > experiment_time) {
            jsPsych.endExperiment()
        }
      },
    on_finish: function(){
-     document.querySelector('#jspsych-progressbar-container').style.display = 'none';
-
      // get trial data
      var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
      // convert to dictionary and get time elapsed
@@ -119,7 +102,6 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      shuffle(data2)
 
      var data2 = Object.values(data2);
-     console.log(data2)
 
      function csvValues(){
        var arrayLength = data2.length;
@@ -128,9 +110,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
            var test_stimuli = []
              for (var j = 0; j < data2[i].length - 1; j++) {
 
-// '<div style="font-size:65px;">  <p> </p>' + Object.values(data2[i][j]).toString().replace(/,/g, '  ') + '</div>'
-
-            console.log('<img src="/static/images/' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>')
+// '<div style="font-size:65px;">  <p> </p>' + Object.values(data2[i][j]).toString().replace(/,/g, '  ') + '</div>
 
            test_stimuli.push({stimulus: '<img src="/static/images/icons/' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>' , data: {test_part: 'training', next_elem: data2[i][j+1]}})
        }
@@ -141,7 +121,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
           stimulus: jsPsych.timelineVariable('stimulus'),
           choices: jsPsych.ALL_KEYS,
           trial_duration: 1000,
-          post_trial_gap: 500,
+          post_trial_gap: 300,
           data: jsPsych.timelineVariable('data'),
           on_finish: function(symbol){
             var spacePressed = jsPsych.data.get().last(1).values()[0].key_press
@@ -177,8 +157,6 @@ jsPsych.data.addProperties({
 jsPsych.init({
     display_element: 'jspsych-target',
     timeline: timeline,
-    show_progress_bar: false,
-    auto_update_progress_bar: false,
     // record data to psiTurk after each trial
     on_data_update: function(data) {
         psiturk.recordTrialData(data);
