@@ -9,7 +9,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
-  var experiment_time = 500000;
+  var experiment_time = 20000;
    var timeline = [];
 
    var bot_test = {
@@ -43,10 +43,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      // define instructions trial
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p> In each trial, you will see some letters (A, B or C) appearing one-by-one. </p>" +
-           "<p> <b> Your task is to stop the sequence when 1) you feel like you can predict the next letter <i>or</i> </p>" +
-           "<p> 2) you feel like there is no structure and the sequence is unpredictable. </b> </p>" +
-           "<p> Some sequences you will see have some structure, and some don't, so they will be more or less predictable. </p>",
+       stimulus: "<p> In each trial, you will see sequences of icons or symbols appearing one-by-one. </p>" +
+           "<p> <b> Your task is to simply watch them, and press the space bar whenever you want to stop the trial and proceed to the next one </p>" +
+           "<p> You might feel confused as to what your task is, but this is just the simplest experiment you've ever done!  </p>",
        choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
@@ -54,12 +53,11 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      timeline.push(instructions);
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p> Remember: Some sequences will be very predictable, some will be somewhat predictable, </p>" +
+       stimulus: "<p> To re-iterate: You just need to stop the trial with pressing space bar whenever you want the next trial to start. </p>" +
        "<p> while others will have no structure at all.</p> <p> <b> Stop the sequence by pressing the spacebar. </b> </p>" +
-       "<p> whenever you feel you can predict the next letter, or you decide that the sequence is unpredictable. </p>" +
-       "<p> When you stop the sequence, you will be asked to predict the next letter, and you will receive feedback. </p>" +
-       "<p> You can also say that the sequence was unpredictable by selecting 'Equally likely' (no feedback in this case). </p>" +
-       "<p> <br> Let us practice. </br> <p>",
+       "<p> The experiment will end automatically after a couple of minutes. </p>" +
+       "<p>  Please, maintain your attention during the experiment. You may encounter little, unexpected tests during the experiment, </p>" +
+       "<p>  to make sure you are paying attention. </p>",
        choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
@@ -67,48 +65,47 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      timeline.push(instructions);
 
 
-       var continue = {
+       var between_sequences = {
          type: 'html-keyboard-response',
          stimulus: "Next sequence coming up..",
          trial_duration: 5000,
          choices: jsPsych.NO_KEYS,
          data: {test_part: 'between_sequences'},
          on_start: function() {
-           document.querySelector('#jspsych-progressbar-container').style.display = 'initial';
-         }
-       };
-
+         document.querySelector('#jspsych-progressbar-container').style.display = 'initial';
          // get trial data
          var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
          // convert to dictionary and get time elapsed
          var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
          // end experiment after 10min
-         var startTime = jsPsych.data.get().last(1).values()[0].startTime
 
          var tick_amount;
          // set progress bar to fraction of total time
-         tick_amount = (time_elapsed - startTime)/experiment_time;
+         tick_amount = time_elapsed/experiment_time;
+
+         console.log(time_elapsed)
+         console.log(experiment_time)
+
+         console.log(tick_amount)
+
          jsPsych.setProgressBar(tick_amount);
 
-         if (time_elapsed - startTime > experiment_time) {
+         if (time_elapsed > experiment_time) {
            jsPsych.endExperiment()
        }
      },
-     on_finish: function(){
-       document.querySelector('#jspsych-progressbar-container').style.display = 'none';
+   on_finish: function(){
+     document.querySelector('#jspsych-progressbar-container').style.display = 'none';
 
-       // get trial data
-       var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-       // convert to dictionary and get time elapsed
-       var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-       // end experiment after 10min
-       var startTime = jsPsych.data.get().last(1).values()[0].startTime
-
-       if (time_elapsed - startTime > experiment_time) {
-         jsPsych.endExperiment()
-     }
+     // get trial data
+     var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
+     // convert to dictionary and get time elapsed
+     var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
+     if (time_elapsed > experiment_time) {
+       jsPsych.endExperiment()
    }
  }
+};
 
      var data2;
      var msg = $.ajax({type: "GET",
@@ -117,6 +114,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
      data2 = Papa.parse(msg)
      data2 = data2['data']
+
+     shuffle(data2)
+
 
      var data2 = Object.values(data2);
      console.log(data2)
@@ -132,7 +132,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
             console.log('<img src="/static/images/' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>')
 
-           test_stimuli.push({stimulus: '<img src="/static/images/' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>' , data: {test_part: 'training', next_elem: data2[i][j+1]}})
+           test_stimuli.push({stimulus: '<img src="/static/images/icons' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>' , data: {test_part: 'training', next_elem: data2[i][j+1]}})
        }
 
        // sample from test_stimuli
@@ -159,145 +159,13 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
         // define questionnaire procedure
         var questionnaire = {
-          timeline: [sequence, continue], //
+          timeline: [sequence, between_sequences], //
         }
         timeline.push(questionnaire);
 
      }
    }
    csvValues()
-
-   var data4;
-   var msg = $.ajax({type: "GET",
-   url: "https://raw.githubusercontent.com/ashtishah/CoCoSci/master/Experiment/sequencesTrial2.csv",
-   async: false}).responseText;
-
-   data4 = Papa.parse(msg)
-   data4 = data4['data']
-
-   var data4 = Object.values(data4);
-
-   function csvValues3(){
-   var arrayLength = data4.length;
-
-     for (var i = 0; i < arrayLength; i++) {
-       var test_stimuli = []
-         for (var j = 0; j < data4[i].length - 1; j++) {
-
-       test_stimuli.push({stimulus: '<div style="font-size:65px;">' +
-       Object.values(data4[i][j]).toString().replace(/,/g, '  ') +
-       '</div>', data: {test_part: 'training', next_elem: data4[i][j+1]}})
-   }
-
-   // sample from test_stimuli
-    var symbol = {
-      type: "html-keyboard-response",
-      stimulus: jsPsych.timelineVariable('stimulus'),
-      choices: jsPsych.ALL_KEYS,
-      trial_duration: 800,
-      post_trial_gap: 300,
-      data: jsPsych.timelineVariable('data'),
-      on_finish: function(symbol){
-        var spacePressed = jsPsych.data.get().last(1).values()[0].key_press
-      if(spacePressed == 32) {
-
-        jsPsych.endCurrentTimeline();
-      }
-    }
-   }
-
-    /* define sequence procedure */
-    var sequence = {
-      timeline: [symbol],
-      timeline_variables: test_stimuli,
-    }
-
-    // define questionnaire3 procedure
-    var questionnaire3 = {
-      timeline: [sequence, continue], //
-    }
-    timeline.push(questionnaire3);
-
-   }
-   }
-   csvValues3()
-
-   var begin_exp = {
-   type: 'html-button-response',
-   stimulus: "<p> You are now ready to proceed with the actual experiment. It will take about 8min from now. </p>" +
-            " <p> <b> Remember to press the spacebar to terminate the sequence when: </b> </p>" +
-            " <p> 1) you can predict the next letter </p> <p> <b> or </b> </p> <p> 2) the sequence is unpredictable. </p>",
-   choices: ['Continue'],
-   data: {test_part: 'instructions'},
-   on_finish: function(){
-     var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
-     // convert to dictionary and get time elapsed
-     var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-
-     jsPsych.data.addProperties({startTime: time_elapsed});
-
-   }
-
-   };
-   timeline.push(begin_exp)
-
- var data3;
- var msg = $.ajax({type: "GET",
- url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment2/sequencesExp2.csv",
-  async: false}).responseText;
-
- data3 = Papa.parse(msg)
- data3 = data3['data']
-
-// remove last sequence (is empty)
- var data3 = Object.values(data3).slice(0, data3.length-1) ;
-
-// shuffle data
-shuffle(data3)
-
- function csvValues2(){
-   var arrayLength = data3.length;
-
-     for (var i = 0; i < arrayLength; i++) {
-       var test_stimuli = []
-         for (var j = 0; j < data3[i].length-1; j++) {
-
-       test_stimuli.push({stimulus: '<div style="font-size:65px;">' +
-       Object.values(data3[i][j]).toString().replace(/,/g, '  ') +
-       '</div>', data: {test_part: 'test', next_elem: data3[i][j+1]}})
-   }
-
-   // sample from test_stimuli
-    var symbol = {
-      type: "html-keyboard-response",
-      stimulus: jsPsych.timelineVariable('stimulus'),
-      choices: jsPsych.ALL_KEYS,
-      trial_duration: 800,
-      post_trial_gap: 300,
-      data: jsPsych.timelineVariable('data'),
-      on_finish: function(symbol){
-        var spacePressed = jsPsych.data.get().last(1).values()[0].key_press
-      if(spacePressed == 32) {
-        jsPsych.endCurrentTimeline()
-      }
-    }
-  }
-
-    /* define sequence2 procedure */
-    var sequence2 = {
-      timeline: [symbol],
-      timeline_variables: test_stimuli,
-    }
-
-    // define questionnaire2 procedure
-    var questionnaire2 = {
-      timeline: [sequence2, continue], //
-}
-    timeline.push(questionnaire2);
-
- }
-}
-csvValues2()
 
 /* record id, condition, counterbalance on every trial */
 jsPsych.data.addProperties({
