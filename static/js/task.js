@@ -9,7 +9,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
-  var experiment_time = 50000;
+  var experiment_time = 300000;
    var timeline = [];
 
    var bot_test = {
@@ -52,7 +52,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        type: 'html-button-response',
        stimulus: "<p> To re-iterate: You just need to stop the trial with pressing space bar whenever you want the next trial to start. </p>" +
        "<p> <p> <b> Stop the sequence by pressing the spacebar. </b> </p>" +
-       "<p> The experiment will end automatically after a couple of minutes. </p>" +
+       "<p> The experiment will end automatically after 5 minutes. </p>" +
        "<p> Please, maintain your attention during the experiment. </p>" +
        "<p> You may encounter little, unexpected tests during the experiment, </p>" +
        "<p>  to make sure you are paying attention. </p>",
