@@ -54,9 +54,10 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p> To re-iterate: You just need to stop the trial with pressing space bar whenever you want the next trial to start. </p>" +
-       "<p> while others will have no structure at all.</p> <p> <b> Stop the sequence by pressing the spacebar. </b> </p>" +
-       "<p> The experiment will end automatically after a couple of minutes. </p>" +
-       "<p>  Please, maintain your attention during the experiment. You may encounter little, unexpected tests during the experiment, </p>" +
+       "<p> <p> <b> Stop the sequence by pressing the spacebar. </b> </p>" +
+       "<p> The experiment will end automatically after 5 minutes. </p>" +
+       "<p> Please, maintain your attention during the experiment. </p>" +
+       "<p> You may encounter little, unexpected tests during the experiment, </p>" +
        "<p>  to make sure you are paying attention. </p>",
        choices: ['Continue'],
        post_trial_gap: 1000,
