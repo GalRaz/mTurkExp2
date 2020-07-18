@@ -1,6 +1,6 @@
 [HIT Configuration]
-title = Stopping and predicting sequences
-description = Predict the next element in a sequence.
+title = Watching and stopping sequences
+description = Watch and stop sequences of cute images.
 amt_keywords = Perception, Psychology
 lifetime = 24
 us_only = true

@@ -9,7 +9,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
-  var experiment_time = 20000;
+  var experiment_time = 300000;
    var timeline = [];
 
    var bot_test = {
@@ -30,7 +30,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      // define instructions trial
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p> <i> This session will last for 10min. Please complete it in full screen mode. </p>" +
+       stimulus: "<p> <i> This session will last for 5min. Please complete it in full screen mode. </p>" +
            "<p> Do this experiment in one go, otherwise it will time out and we will </p>" +
            "<p> not be able to pay you. </i> </p> ",
        choices: ['Continue'],
@@ -109,14 +109,13 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
      var data2;
      var msg = $.ajax({type: "GET",
-     url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment2/generateseqs.csv",
+     url: "https://raw.githubusercontent.com/sradkani/CoCoSci/master/Experiment2/slideseqs.csv",
       async: false}).responseText;
 
      data2 = Papa.parse(msg)
      data2 = data2['data']
 
      shuffle(data2)
-
 
      var data2 = Object.values(data2);
      console.log(data2)
@@ -132,7 +131,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
 
             console.log('<img src="/static/images/' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>')
 
-           test_stimuli.push({stimulus: '<img src="/static/images/icons' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>' , data: {test_part: 'training', next_elem: data2[i][j+1]}})
+           test_stimuli.push({stimulus: '<img src="/static/images/icons/' + Object.values(data2[i][j]).toString().replace(/,/g, '')  + '.png"></img>' , data: {test_part: 'training', next_elem: data2[i][j+1]}})
        }
 
        // sample from test_stimuli
