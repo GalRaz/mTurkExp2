@@ -15,7 +15,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
    var id_check = {
      type: 'survey-text',
      questions: [
-    {prompt: "<p> Enter your Prolific ID: </p>",
+    {prompt: "<p> Enter your Prolific ID: </p>"}],
     button_label: 'Continue',
     data: {test_part: 'id_check'}
  }
