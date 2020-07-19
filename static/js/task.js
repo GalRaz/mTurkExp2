@@ -27,9 +27,10 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      // define instructions trial
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p> <i> This session will last for 5min. Please complete it in full screen mode. </p>" +
+       stimulus: "<p> <i> Thank you for participating in our experiment!  </i> </p>" +
+            "<p> This session will last for 5min. Please complete it in full screen mode. </p>" +
            "<p> Do this experiment in one go, otherwise it will time out and we will </p>" +
-           "<p> not be able to pay you. </i> </p> ",
+           "<p> not be able to pay you. </p> ",
        choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
@@ -40,9 +41,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      // define instructions trial
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p> In each trial, you will see sequences of icons or symbols appearing one-by-one. </p>" +
-           "<p> <b> Your task is to simply watch them, and press the space bar whenever you want to stop the trial and proceed to the next one </p>" +
-           "<p> You might feel confused as to what your task is, but this is just the simplest experiment you've ever done!  </p>",
+       stimulus: "<p> In each trial, you will see sequences of icons appearing one-by-one. </p>" +
+           "<p> <b> Your task is very easy: you simply need to watch the icons, </p>" +
+          "<p> and press the space bar whenever you want to stop the sequence and proceed to the next one. </b> </p>"
        choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
@@ -50,15 +51,21 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      timeline.push(instructions);
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p> To re-iterate: You just need to stop the trial with pressing space bar whenever you want the next trial to start. </p>" +
-       "<p> <p> <b> Stop the sequence by pressing the spacebar. </b> </p>" +
+       stimulus: "<p> To re-iterate: Your task is simply to press the space bar whenever you want the next sequence to start. </p>" +
        "<p> The experiment will end automatically after 5 minutes. </p>" +
-       "<p> Please, maintain your attention during the experiment. </p>" +
+       "<p> <b> Please, maintain your attention during the experiment. </b> </p>" +
        "<p> You may encounter little, unexpected tests during the experiment, </p>" +
        "<p>  to make sure you are paying attention. </p>",
        choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
+       on_finish: function() {
+       // get trial data
+       var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
+       // convert to dictionary and get time elapsed
+       var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
+       window.startTime = time_elapsed
+      }
      };
      timeline.push(instructions);
 
@@ -74,9 +81,13 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
          var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
          // convert to dictionary and get time elapsed
          var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-         // end experiment after 10min
+         // get time
+         var startTime = jsPsych.data.get().last(1).values()[0].startTime
 
-         if (time_elapsed > experiment_time) {
+         console.log(time_elapsed)
+         console.log(window.startTime)
+
+         if (time_elapsed - window.startTime > experiment_time) {
            jsPsych.endExperiment()
        }
      },
@@ -85,8 +96,12 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
      // convert to dictionary and get time elapsed
      var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-     if (time_elapsed > experiment_time) {
-       jsPsych.endExperiment()
+
+     var startTime = jsPsych.data.get().last(1).values()[0].startTime
+
+     if (time_elapsed - window.startTime > experiment_time)
+     {
+        jsPsych.endExperiment()
    }
  }
 };
@@ -120,7 +135,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
           type: "html-keyboard-response",
           stimulus: jsPsych.timelineVariable('stimulus'),
           choices: jsPsych.ALL_KEYS,
-          trial_duration: 1000,
+          trial_duration: 900,
           post_trial_gap: 300,
           data: jsPsych.timelineVariable('data'),
           on_finish: function(symbol){
