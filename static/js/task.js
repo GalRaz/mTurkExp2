@@ -125,6 +125,12 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      data2 = Papa.parse(msg)
      data2 = data2['data']
 
+     console.log(data2)
+     // remove last sequence (is empty)
+     var data2 = Object.values(data2).slice(0, data2.length-1) ;
+     console.log(data2)
+
+
      shuffle(data2)
 
      var data2 = Object.values(data2);
