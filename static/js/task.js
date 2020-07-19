@@ -9,7 +9,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
-  var experiment_time = 30000;
+  var experiment_time = 300000;
    var timeline = [];
 
    var id_check = {
@@ -62,7 +62,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p> To re-iterate: Your task is simply to watch the icons, </p>" +
-       "<p> and press the space bar whenever you want to move on. </p>" +
+       "<p> and press the space bar whenever you lose interest in the sequence. </p>" +
        "<p> The experiment will end automatically after 5 minutes. </p>" +
        "<p> <b> Please, maintain your attention during the experiment. </b> </p>" +
        "<p> You may encounter little, unexpected tests during the experiment, </p>" +
