@@ -42,8 +42,9 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p> In each trial, you will see sequences of icons appearing one-by-one. </p>" +
-           "<p> <b> Your task is very easy: you simply need to watch the icons, </p>" +
-          "<p> and press the space bar whenever you want to stop the sequence and proceed to the next one. </b> </p>"
+           "<p> Your task is very easy: Watch the icons closely, and for as long as you like.  </p>" +
+           "<p> Whenever you don't feel like watching the sequence anymore, press space bar to see the next one </p>" +
+          "<p> and press the space bar whenever you want to stop the sequence and proceed to the next one. </p>",
        choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
@@ -51,7 +52,8 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      timeline.push(instructions);
      var instructions = {
        type: 'html-button-response',
-       stimulus: "<p> To re-iterate: Your task is simply to press the space bar whenever you want the next sequence to start. </p>" +
+       stimulus: "<p> To re-iterate: Your task is simply to watch the icons, </p>" +
+       "<p> and press the space bar whenever you want the next sequence to start. </p>" +
        "<p> The experiment will end automatically after 5 minutes. </p>" +
        "<p> <b> Please, maintain your attention during the experiment. </b> </p>" +
        "<p> You may encounter little, unexpected tests during the experiment, </p>" +
