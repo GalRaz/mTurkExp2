@@ -12,6 +12,16 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
   var experiment_time = 300000;
    var timeline = [];
 
+   var id_check = {
+     type: 'survey-text',
+     questions: [
+    {prompt: "<p> Enter your Prolific ID: </p>"
+    button_label: 'Continue',
+    data: {test_part: 'id_check'}
+ }
+
+ timeline.push(id_check);
+
    var bot_test = {
      type: 'survey-text',
      questions: [
