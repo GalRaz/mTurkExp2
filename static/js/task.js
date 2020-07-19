@@ -42,8 +42,8 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p> In each trial, you will see sequences of icons appearing one-by-one. </p>" +
-           "<p> Your task is very easy: Watch the icons closely, and for as long as you like.  </p>" +
-           "<p> Whenever you don't feel like watching the sequence anymore, press space bar to see the next one. </p>",
+           "<p> <b> Your task is very easy: Watch the icons closely, and for as long as you like.  </b> </p>" +
+           "<p> Whenever you lose interest in the sequence, press space bar to see the next one. </p>",
       choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
