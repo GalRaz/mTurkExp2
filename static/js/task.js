@@ -9,7 +9,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
-  var experiment_time = 300000;
+  var experiment_time = 30000;
    var timeline = [];
 
    var id_check = {
