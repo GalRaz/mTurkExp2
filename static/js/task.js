@@ -28,7 +28,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p> <i> Thank you for participating in our experiment!  </i> </p>" +
-            "<p> This session will last for 5min. Please complete it in full screen mode. </p>" +
+            "<p> This session will last for 5min. <b> Please complete it in full screen mode. </b> </p>" +
            "<p> Do this experiment in one go, otherwise it will time out and we will </p>" +
            "<p> not be able to pay you. </p> ",
        choices: ['Continue'],
@@ -43,9 +43,8 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
        type: 'html-button-response',
        stimulus: "<p> In each trial, you will see sequences of icons appearing one-by-one. </p>" +
            "<p> Your task is very easy: Watch the icons closely, and for as long as you like.  </p>" +
-           "<p> Whenever you don't feel like watching the sequence anymore, press space bar to see the next one </p>" +
-          "<p> and press the space bar whenever you want to stop the sequence and proceed to the next one. </p>",
-       choices: ['Continue'],
+           "<p> Whenever you don't feel like watching the sequence anymore, press space bar to see the next one. </p>",
+      choices: ['Continue'],
        post_trial_gap: 1000,
        data: {test_part: 'instructions'},
      };
@@ -53,7 +52,7 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
      var instructions = {
        type: 'html-button-response',
        stimulus: "<p> To re-iterate: Your task is simply to watch the icons, </p>" +
-       "<p> and press the space bar whenever you want the next sequence to start. </p>" +
+       "<p> and press the space bar whenever you want to move on. </p>" +
        "<p> The experiment will end automatically after 5 minutes. </p>" +
        "<p> <b> Please, maintain your attention during the experiment. </b> </p>" +
        "<p> You may encounter little, unexpected tests during the experiment, </p>" +
