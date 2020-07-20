@@ -114,7 +114,10 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
            jsPsych.endExperiment()
        }
      },
-   on_finish: function(){
+     on_finish: function(){
+
+     document.querySelector('#jspsych-progressbar-container').style.display = 'none';
+
      // get trial data
      var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
      // convert to dictionary and get time elapsed
