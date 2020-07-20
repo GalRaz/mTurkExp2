@@ -29,7 +29,10 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
     "<p> What do you see? Describe the shape & color with two words, separated by a comma. </p>", required: true}],
     preamble: '<img src="/static/images/shape.png"></img>',
     button_label: 'Continue',
-    data: {test_part: 'botcheck'}
+    data: {test_part: 'botcheck'},
+    on_start: function() {
+    document.querySelector('#jspsych-progressbar-container').style.display = 'none';
+  }
  }
    timeline.push(bot_test);
 
@@ -88,15 +91,24 @@ var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
          choices: jsPsych.NO_KEYS,
          data: {test_part: 'between_sequences'},
          on_start: function() {
+           document.querySelector('#jspsych-progressbar-container').style.display = 'initial';
+
          // get trial data
          var trialstring = jsPsych.data.getLastTrialData().json().split('[').join('').split(']').join('');
          // convert to dictionary and get time elapsed
          var time_elapsed = JSON.parse(trialstring)["time_elapsed"];
-         // get time
-         var startTime = jsPsych.data.get().last(1).values()[0].startTime
 
+         // get time
          console.log(time_elapsed)
          console.log(window.startTime)
+
+
+         var tick_amount;
+          // set progress bar to fraction of total time
+          tick_amount = (time_elapsed - window.startTime)/experiment_time;
+          jsPsych.setProgressBar(tick_amount);
+
+
 
          if (time_elapsed - window.startTime > experiment_time) {
            jsPsych.endExperiment()
@@ -189,6 +201,8 @@ jsPsych.data.addProperties({
 jsPsych.init({
     display_element: 'jspsych-target',
     timeline: timeline,
+    show_progress_bar: true,
+    auto_update_progress_bar: false,
     // record data to psiTurk after each trial
     on_data_update: function(data) {
         psiturk.recordTrialData(data);
